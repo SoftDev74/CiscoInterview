@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+	
+  <head>
+    <title>Create a room</title>
+  </head>
+  
+  <body> 
+    <b>Create your Room below</b><br><br>
+    <! -- form to create room -->
+    <form id="formIdCreate">
+      <div>
+        <label for="accessTokenRoom">Enter access token: </label>
+        <input type="password" id="accessTokenRoom">
+      </div>
+      <br>
+      
+      <div>
+        <label for="roomName">Enter room Title: </label>
+        <input type = "text" id="roomName"></input>
+      </div>
+      
+      <div>
+        <button type="submit">Create Room</button> 
+      </div>
+
+    </form>
+
+    <div id="output"></div>
+
+    <! -- script to create room -->
+    <script type="text/javascript">
+      document.getElementById('formIdCreate').addEventListener('submit', createRoom);
+
+      function createRoom(e) {
+        e.preventDefault();
+
+        let createToken = document.getElementById('accessTokenRoom').value;
+        let roomTitle = document.getElementById('roomName').value;
+
+        fetch('https://webexapis.com/v1/rooms', {
+          method: 'POST',
+          headers: {
+            'Content-type' : 'application/json',
+            'Authorization': `Bearer ${createToken}`
+          },
+          body:JSON.stringify ({
+            'title': roomTitle,
+          })
+        })
+        .then(function(res){
+          return res.json()
+        })
+        .then(function(data){
+          //console.log(data);
+          let output = `${data.title}`
+          document.getElementById('output').innerHTML = "Room '" + output + "' has been created!";
+        })
+      }
+    </script>
+    <br>
+    <br>
+    <b>========================================</b>
+    <br>
+    <br>
+    <br>
+    <b>Enter your Message below</b>
+    <br>
+    <br>
+    <! -- form to create message -->
+    <form id="formIdMSG">
+      <div>
+        <label for="accessTokenMsg">Enter access token: </label>
+        <input type="password" id="accessTokenMsg">
+      </div>
+      <br>
+      <div>
+        <label for="roomIdEnter">Enter room ID: </label>
+        <input type="text" id="roomIdEnter">
+      </div>
+      <br>
+      <label for="messageText">Enter message: </label>
+      <div>
+        <textarea id="messageText" cols="40" rows="4"></textarea>
+      </div>
+
+      <div>
+        <button type="submit">Send</button> 
+      </div>
+
+    </form>
+
+     <div id="output1"></div>
+
+    <! -- script to create message -->
+    <script type="text/javascript">
+      document.getElementById('formIdMSG').addEventListener('submit', sendText);
+
+      function sendText(e) {
+        e.preventDefault();
+
+        let createToken = document.getElementById('accessTokenMsg').value;
+        let message = document.getElementById('messageText').value;
+        let roomId = document.getElementById('roomIdEnter').value;;
+
+        fetch('https://webexapis.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-type' : 'application/json',
+            'Authorization': `Bearer ${createToken}`
+          },
+          body:JSON.stringify ({
+            'roomId': roomId,
+            'text': message
+          })
+        })
+        .then(function(res){
+          return res.json()
+        })
+        .then(function(data){
+          //console.log(data);
+          let output1 = `${data.text}`
+          document.getElementById('output1').innerHTML = output1;
+        })
+      }
+    </script>
+
+    <br>
+    <br>
+    <b>========================================</b>
+    <br>
+    <br>
+    <br>
+    <b>Create your Card below</b>
+    <br>
+    <br>
+    <! -- form to create card -->
+    <form id="formIdCard">
+      <div>
+        <label for="accessTokenCard">Enter access token: </label>
+        <input type="password" id="accessTokenCard">
+      </div>
+      <br>
+      <div>
+        <label for="roomIdEnter1">Enter room ID: </label>
+        <input type="text" id="roomIdEnter1">
+      </div>
+      <br>
+      <div>
+        <label for="cardText">Enter Card Name: </label>
+        <input id="cardText"></input>
+      </div>
+
+      <div>
+        <button type="submit">Create Card</button> 
+      </div>
+
+    </form>
+
+    <div id="output2"></div>
+
+    <script type="text/javascript">
+      document.getElementById('formIdCard').addEventListener('submit', sendCard);
+
+      function sendCard(e) {
+        e.preventDefault();
+
+        let createToken = document.getElementById('accessTokenCard').value;
+        let message = document.getElementById('cardText').value;
+        let roomId = document.getElementById('roomIdEnter1').value;
+
+        fetch('https://webexapis.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-type' : 'application/json',
+            'Authorization': `Bearer ${createToken}`
+          },
+          body:JSON.stringify ({
+            'roomId': roomId,
+            'text': message,
+            'attachments': [
+            {
+              'contentType': 'application/vnd.microsoft.card.adaptive',
+              'content': {
+                'type': 'AdaptiveCard',
+                'version': '1.0',
+                'body': [
+                {
+                  'type': 'TextBlock',
+                  'text': message,
+                  'size': 'medium',
+                  'weight': 'bolder'
+                },
+                {
+                  'type': 'Input.Text',
+                  'id': 'inputField',
+                  'isMultiline': true,
+                  'placeholder': 'Enter Text'
+                },
+                {
+                  'type': 'Input.ChoiceSet',
+                  'id': 'dropdownInput',
+                  'value': '2',
+                  'choices': [
+                  {
+                    'title': 'Option 1',
+                    'value': '0'
+                  },
+                  {
+                    'title': 'Option 2',
+                    'value': '1'
+                  },
+                  {
+                    'title': 'Option 3',
+                    'value': '2'
+                  }]
+                }]
+              }
+            }]
+          })
+        })
+        .then(function(res){
+          return res.json()
+        })
+        .then(function(data){
+          //console.log(data);
+          let output2 = `${data.text}`
+          document.getElementById('output2').innerHTML = "Card '" + output2 + "' has been created!";
+        })
+      }
+    </script>
+
+  </body>
+</html>
